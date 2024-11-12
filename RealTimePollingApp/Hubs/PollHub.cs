@@ -2,10 +2,8 @@
 
 public class PollHub : Hub
 {
-    public async Task CastVote(string pollId, string option)
+    public async Task BroadcastResults(int pollId, object results)
     {
-        // Burada oy bilgisini alıp veritabanına kaydedeceğiz
-        // Ve tüm kullanıcılarla anında paylaşacağız
-        await Clients.All.SendAsync("ReceiveVote", pollId, option);
+        // Tüm bağlı kullanıcılara oy sonuçlarını gönder
+        await Clients.All.SendAsync("ReceiveResults", pollId, results);
     }
-}

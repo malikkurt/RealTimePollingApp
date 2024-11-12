@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RealTimePollingApp.Data;
 using RealTimePollingApp.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,52 +9,61 @@ using System.Linq;
 [ApiController]
 public class PollController : ControllerBase
 {
+    private PollDbContext _context { get; set; }
+
+    public PollController(PollDbContext context)
+    {
+        _context = context;
+    }
+
     // In-memory koleksiyonlar
     private static List<Poll> Polls = new List<Poll>();
     private static List<Vote> Votes = new List<Vote>();
 
     // Anketleri listeleme
     [HttpGet]
-    public IActionResult GetPolls() 
+    public async Task<IActionResult> GetPolls()
     {
-        return Ok(Polls);
+        var polls = await _context.Polls.ToListAsync();
+        return Ok(polls);
     }
 
     // Yeni anket oluşturma
     [HttpPost]
-    public IActionResult CreatePoll([FromBody] Poll poll)
+    public async Task<IActionResult> CreatePoll([FromBody] Poll poll)
     {
-        poll.Id = Polls.Count + 1; // Anket için benzersiz ID atama
-        Polls.Add(poll);
+        _context.Polls.Add(poll);
+        await _context.SaveChangesAsync();
         return Ok(poll);
     }
 
     // Belirli bir ankete oy verme
     [HttpPost("{pollId}/vote")]
-    public IActionResult Vote(int pollId, [FromBody] string selectedOption)
+    public async Task<IActionResult> Vote(int pollId, [FromBody] string selectedOption)
     {
-        var poll = Polls.FirstOrDefault(p => p.Id == pollId);
+        var poll = await _context.Polls.FindAsync(pollId);
         if (poll == null || !poll.Options.Contains(selectedOption))
         {
             return BadRequest("Invalid poll or option.");
         }
 
-        Votes.Add(new Vote { PollId = pollId, SelectedOption = selectedOption });
+        var vote = new Vote { PollId = pollId, SelectedOption = selectedOption };
+        _context.Votes.Add(vote);
+        await _context.SaveChangesAsync();
         return Ok();
     }
 
-    // Anket sonuçlarını getirme
     [HttpGet("{pollId}/results")]
-    public IActionResult GetResults(int pollId)
+    public async Task<IActionResult> GetResults(int pollId)
     {
-        var poll = Polls.FirstOrDefault(p => p.Id == pollId);
+        var poll = await _context.Polls.FindAsync(pollId);
         if (poll == null)
         {
             return NotFound();
         }
 
         // Seçeneklere göre oyları gruplandırarak sonuçları oluştur
-        var results = Votes
+        var results = _context.Votes
             .Where(v => v.PollId == pollId)
             .GroupBy(v => v.SelectedOption)
             .Select(g => new
@@ -61,6 +72,6 @@ public class PollController : ControllerBase
                 Count = g.Count()
             });
 
-        return Ok(results);
+        return Ok(await results.ToListAsync());
     }
 }
