@@ -3,7 +3,15 @@ using RealTimePollingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -13,15 +21,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
 builder.Services.AddDbContext<PollDbContext>(options =>
-    options.UseSqlite("Data Source=polls.db")); // Veritabaný dosyasý "polls.db" olarak tanýmlanýyor
+    options.UseSqlite("Data Source=polls.db")); 
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAllOrigins");
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

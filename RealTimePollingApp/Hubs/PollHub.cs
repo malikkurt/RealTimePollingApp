@@ -7,3 +7,4 @@ public class PollHub : Hub
         // Tüm bağlı kullanıcılara oy sonuçlarını gönder
         await Clients.All.SendAsync("ReceiveResults", pollId, results);
     }
+}

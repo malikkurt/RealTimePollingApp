@@ -1,10 +1,10 @@
-﻿namespace RealTimePollingApp.Models
-{
-    public class Poll
+﻿    namespace RealTimePollingApp.Models
     {
-        public int Id { get; set; } // Anketin ID'si
-        public string Title { get; set; } // Anket Başlığı
-        public string Description { get; set; } // Anket Açıklaması
-        public List<string> Options { get; set; } // Oy Seçenekleri
+        public class Poll
+        {
+            public int Id { get; set; } 
+            public string Title { get; set; }
+            public string Description { get; set; } 
+            public List<string> Options { get; set; } 
+        }
     }
-}
