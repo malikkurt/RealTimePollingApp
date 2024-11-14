@@ -23,8 +23,6 @@ async function loadPolls() {
 
     const pollListContainer = document.getElementById("pollList");
     pollListContainer.innerHTML = ""; // Mevcut anketleri temizle
-    
-
 
     for (let i = 0; i < polls.length; i++) {
         const poll = polls[i];
@@ -60,25 +58,18 @@ async function loadPoll(pollId) {
         optionsContainer.appendChild(document.createElement("br"));
     });
 
-    // Sonuçları dinle
-    connection.on("ReceiveResults", (pollId, results) => {
-        const resultsContainer = document.getElementById("results");
-        resultsContainer.innerHTML = ""; // Önceki sonuçları temizle
-
-        results.forEach(result => {
-            const resultItem = document.createElement("div");
-            resultItem.innerText = `${result.option}: ${result.count} oy`;
-            resultsContainer.appendChild(resultItem);
-        });
-    });
+    // Oy Ver butonuna pollId'yi ileterek castVote çağrısı yap
+    const voteButton = document.querySelector("#pollContainer button");
+    voteButton.onclick = () => castVote(pollId);
 }
+
 
 // Sayfa yüklendiğinde tüm anketleri listele
 loadPolls();
 
 
 // Oy verme işlemi
-async function castVote() {
+async function castVote(pollId) {
     const selectedOptionElement = document.querySelector('input[name="pollOption"]:checked');
 
     if (!selectedOptionElement) {
@@ -87,7 +78,6 @@ async function castVote() {
     }
 
     const selectedOption = selectedOptionElement.value;
-    const pollId = document.getElementById("pollTitle").dataset.pollId; // pollId, yüklediğimiz anketin ID'si
 
     // Oy gönderme isteği
     await fetch(`https://localhost:7048/api/poll/${pollId}/vote`, {
@@ -96,7 +86,6 @@ async function castVote() {
         body: JSON.stringify(selectedOption)
     });
 }
-
 
 
 // SignalR ile güncel sonuçları dinleme
@@ -111,3 +100,34 @@ connection.on("ReceiveResults", (pollId, results) => {
     });
 });
 
+async function addPoll() {
+    const title = document.getElementById("newPollTitle").value;
+    const description = document.getElementById("newPollDescription").value;
+    const option1 = document.getElementById("newPollOption1").value;
+    const option2 = document.getElementById("newPollOption2").value;
+
+    if (!title || !description || !option1 || !option2) {
+        alert("Lütfen anket başlığı, açıklama ve en az iki seçenek girin.");
+        return;
+    }
+
+    const newPoll = {
+        title: title,
+        description: description,
+        options: [option1, option2] // Seçenekleri liste olarak gönderiyoruz
+    };
+
+    // Yeni anketi sunucuya gönder
+    const response = await fetch("https://localhost:7048/api/poll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPoll)
+    });
+
+    if (response.ok) {
+        alert("Anket başarıyla eklendi!");
+        loadPolls(); // Anketler listesini güncelle
+    } else {
+        alert("Anket eklenirken bir hata oluştu.");
+    }
+}

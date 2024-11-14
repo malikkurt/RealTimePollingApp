@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 [Route("api/[controller]")]
 [ApiController]
 public class PollController : ControllerBase
@@ -81,7 +80,7 @@ public class PollController : ControllerBase
             .ToList();
 
         // SignalR ile sonuçları tüm bağlı istemcilere gönder
-        await BroadcastResults(pollId, results);
+        await _pollHubContext.Clients.All.SendAsync("ReceiveResults", pollId, results);
 
         return Ok(); 
     }

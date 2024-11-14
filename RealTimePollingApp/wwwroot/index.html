@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Polling App</title>
+    
 </head>
 <body>
     <h1>Canlı Anket</h1>
@@ -17,8 +18,19 @@
     <!-- Seçilen anketin oylama ekranı -->
     <div id="pollContainer" style="display:none;">
         <h3 id="pollTitle"></h3>
+        <p id="pollDescription"></p>
         <div id="options"></div>
         <button onclick="castVote()">Oy Ver</button>
+    </div>
+
+    <!-- Yeni anket ekleme formu -->
+    <div id="newPollContainer">
+        <h3>Yeni Anket Ekle</h3>
+        <input type="text" id="newPollTitle" placeholder="Anket Başlığı"><br>
+        <textarea id="newPollDescription" placeholder="Açıklama"></textarea><br>
+        <input type="text" id="newPollOption1" placeholder="Seçenek 1"><br>
+        <input type="text" id="newPollOption2" placeholder="Seçenek 2"><br>
+        <button onclick="addPoll()">Anket Ekle</button>
     </div>
 
     <h3>Sonuçlar</h3>
