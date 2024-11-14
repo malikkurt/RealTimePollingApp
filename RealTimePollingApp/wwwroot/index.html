@@ -4,41 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Polling App</title>
-    
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
-    <h1>Canlı Anket</h1>
-
-    <!-- Anketlerin listeleneceği bölüm -->
+    <!-- Anketlerin listeleneceği bölüm (left sidebar) -->
     <div id="pollListContainer">
         <h3>Mevcut Anketler</h3>
         <ul id="pollList"></ul>
+        <!-- Button moved to sidebar -->
+        <button onclick="showNewPollForm()">Yeni Anket Ekle</button>
     </div>
 
-    <!-- Seçilen anketin oylama ekranı -->
-    <div id="pollContainer" style="display:none;">
+    <!-- Polling section (main content) -->
+    <div id="pollContainer">
+        <!-- Poll voting screen -->
         <h3 id="pollTitle"></h3>
         <p id="pollDescription"></p>
         <div id="options"></div>
+
         <button onclick="castVote()">Oy Ver</button>
+
+        <!-- Results section below the poll -->
+        <h3>Sonuçlar</h3>
+        <div id="results"></div>
     </div>
 
     <!-- Yeni anket ekleme formu -->
-    <div id="newPollContainer">
-        <h3>Yeni Anket Ekle</h3>
-        <input type="text" id="newPollTitle" placeholder="Anket Başlığı"><br>
-        <textarea id="newPollDescription" placeholder="Açıklama"></textarea><br>
+<div id="newPollContainer" style="display:none;">
+    <h3>Yeni Anket Ekle</h3>
+    <input type="text" id="newPollTitle" placeholder="Anket Başlığı"><br>
+    <textarea id="newPollDescription" placeholder="Açıklama"></textarea><br>
+    <div id="pollOptionsContainer">
         <input type="text" id="newPollOption1" placeholder="Seçenek 1"><br>
         <input type="text" id="newPollOption2" placeholder="Seçenek 2"><br>
-        <button onclick="addPoll()">Anket Ekle</button>
     </div>
+    <button onclick="addOption()">Seçenek Ekle</button>
+    <button onclick="addPoll()">Anket Ekle</button>
+    <button onclick="cancelNewPoll()">İptal</button>
+</div>
 
-    <h3>Sonuçlar</h3>
-    <div id="results"></div>
 
     <!-- SignalR Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
     <!-- Polling App JavaScript -->
     <script src="js/polling.js"></script>
 </body>
+
 </html>

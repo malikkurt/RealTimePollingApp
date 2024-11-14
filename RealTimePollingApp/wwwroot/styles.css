@@ -1,1 +1,250 @@
-﻿
+﻿/* General body and layout styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+    margin: 0;
+}
+
+/* Poll list container (left sidebar) */
+#pollListContainer {
+    width: 250px;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+    #pollListContainer h3 {
+        text-align: center;
+        font-size: 20px;
+    }
+
+    /* New Poll Button in Sidebar */
+    #pollListContainer button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        margin-top: 20px;
+        width: 100%;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+
+        #pollListContainer button:hover {
+            background-color: #0056b3;
+        }
+
+#pollList {
+    list-style-type: none;
+    padding: 0;
+}
+
+    #pollList li {
+        padding: 10px;
+        background-color: #444;
+        margin: 5px 0;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        #pollList li:hover {
+            background-color: #555;
+        }
+
+/* Poll voting section (main content) */
+#pollContainer {
+    margin-left: 270px; /* Adjusted for sidebar */
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for modern look */
+    border-radius: 8px;
+    display: none; /* Hidden initially */
+    width: calc(100% - 270px); /* Takes up remaining space */
+    max-width: 800px; /* Max width for better readability */
+    margin-top: 20px;
+    z-index: 5;
+    transition: all 0.3s ease; /* Smooth transition for showing */
+}
+
+    #pollContainer h3 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 15px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    #pollContainer p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+/* Poll options (radio buttons) */
+#options {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    #options input[type="radio"] {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    #options label {
+        font-size: 16px;
+        margin-right: 20px;
+        cursor: pointer;
+    }
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    margin-top: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 30px; /* Rounded corners for the button */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #218838;
+    }
+
+/* Results section */
+#results {
+    margin-top: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    #results h3 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    #results div {
+        background-color: #f1f1f1;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-size: 16px;
+        color: #555;
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #pollContainer {
+        margin-left: 0;
+        width: 100%;
+        max-width: none;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    #pollContainer h3 {
+        font-size: 24px;
+    }
+
+    #pollContainer p {
+        font-size: 16px;
+    }
+
+    #results h3 {
+        font-size: 20px;
+    }
+
+    #results div {
+        font-size: 14px;
+    }
+}
+
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+    button:hover {
+        background-color: #218838;
+    }
+
+/* New poll form styles */
+#newPollContainer {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    #newPollContainer input, #newPollContainer textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #newPollContainer button {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        #newPollContainer button:hover {
+            background-color: #0056b3;
+        }
+
+/* Results section */
+#results {
+    margin-top: 30px;
+}
+
+    #results div {
+        background-color: #f1f1f1;
+        padding: 10px;
+        margin-bottom: 5px;
+    }
