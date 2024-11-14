@@ -53,6 +53,7 @@ public class PollController : ControllerBase
         return Ok(poll);
     }
 
+    
     // 3. Belirli bir ankete oy verme ve sonuçları yayma
     [HttpPost("{pollId}/vote")]
     public async Task<IActionResult> Vote(int pollId, [FromBody] string selectedOption)
@@ -75,15 +76,18 @@ public class PollController : ControllerBase
             .Select(g => new
             {
                 Option = g.Key,
-                Count = g.Count()
+                Count = g.Count(),
+                Percentage = (float)g.Count() / _context.Votes.Count(v => v.PollId == pollId) * 100 // Yüzde hesaplama
             })
             .ToList();
 
         // SignalR ile sonuçları tüm bağlı istemcilere gönder
         await _pollHubContext.Clients.All.SendAsync("ReceiveResults", pollId, results);
 
-        return Ok(); 
+        return Ok();
     }
+
+
 
     // 4. Belirli bir anketin sonuçlarını alma
     [HttpGet("{pollId}/results")]
@@ -102,10 +106,33 @@ public class PollController : ControllerBase
             .Select(g => new
             {
                 Option = g.Key,
-                Count = g.Count()
+                Count = g.Count(),
+                Percentage = (float)g.Count() / _context.Votes.Count(v => v.PollId == pollId) * 100 // Yüzde hesaplama
             });
 
         return Ok(await results.ToListAsync());
+    }
+
+
+    // 5. Belirli bir anketi silme
+    [HttpDelete("{pollId}")]
+    public async Task<IActionResult> DeletePoll(int pollId)
+    {
+        var poll = await _context.Polls.FindAsync(pollId);
+        if (poll == null)
+        {
+            return NotFound();
+        }
+
+        // İlgili ankete ait oyları da silmek isteyebilirsiniz
+        var votes = _context.Votes.Where(v => v.PollId == pollId);
+        _context.Votes.RemoveRange(votes);
+
+        // Anketi sil
+        _context.Polls.Remove(poll);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Poll deleted successfully." });
     }
 
 }

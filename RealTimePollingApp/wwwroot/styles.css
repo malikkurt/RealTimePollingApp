@@ -70,17 +70,18 @@ h1 {
 
 /* Poll voting section (main content) */
 #pollContainer {
-    margin-left: 270px; /* Adjusted for sidebar */
+    margin-left: 270px; /* Adjusted for sidebar width */
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for modern look */
     border-radius: 8px;
     display: none; /* Hidden initially */
     width: calc(100% - 270px); /* Takes up remaining space */
-    max-width: 800px; /* Max width for better readability */
+    max-width: 1200px; /* Max width for readability */
     margin-top: 20px;
     z-index: 5;
     transition: all 0.3s ease; /* Smooth transition for showing */
+    min-height: 400px; /* Ensure it has a reasonable height */
 }
 
     #pollContainer h3 {
@@ -134,29 +135,64 @@ button {
         background-color: #218838;
     }
 
-/* Results section */
+/* Results Section */
 #results {
     margin-top: 30px;
     text-align: center;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
     #results h3 {
         font-size: 24px;
         color: #333;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
 
-    #results div {
-        background-color: #f1f1f1;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
+/* Individual Result Item */
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Side: Text for Option and Vote Count */
+.result-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 18px;
+}
+
+.option-text {
+    font-weight: bold;
+}
+
+.vote-count {
+    color: #666;
+}
+
+/* Right Side: Circular Progress for Percentage */
+.result-circle {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 10px solid #ddd; /* Base circle color */
+    background: conic-gradient(#28a745 calc(var(--percentage) * 1%), #ddd 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .result-circle .percentage-text {
+        position: absolute;
         font-size: 16px;
-        color: #555;
+        color: #333;
+        font-weight: bold;
     }
 
 /* Responsive Design */
@@ -207,44 +243,128 @@ button {
 
 /* New poll form styles */
 #newPollContainer {
-    background-color: white;
+    margin-left: 270px; /* Align with sidebar */
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for modern look */
+    border-radius: 8px;
+    display: none; /* Hidden initially */
+    width: calc(100% - 270px); /* Takes up remaining space */
+    max-width: 1200px; /* Max width for readability */
     margin-top: 20px;
-    width: 300px;
-    margin-left: auto;
-    margin-right: auto;
+    z-index: 5;
+    transition: all 0.3s ease; /* Smooth transition for showing */
+    min-height: 400px; /* Ensure it has a reasonable height */
 }
 
-    #newPollContainer input, #newPollContainer textarea {
+    /* Form fields and buttons inside the new poll form */
+    #newPollContainer input,
+    #newPollContainer textarea {
         width: 100%;
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box; /* Ensure padding is included in width */
     }
 
     #newPollContainer button {
         background-color: #007bff;
-        border: none;
         color: white;
+        border: none;
         padding: 10px 20px;
-        border-radius: 5px;
         font-size: 16px;
+        border-radius: 5px;
         cursor: pointer;
+        margin-right: 10px;
+        transition: background-color 0.3s ease;
     }
 
         #newPollContainer button:hover {
             background-color: #0056b3;
         }
-
 /* Results section */
+/* Results Section */
 #results {
     margin-top: 30px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-    #results div {
-        background-color: #f1f1f1;
-        padding: 10px;
-        margin-bottom: 5px;
+    /* Title for Results */
+    #results h3 {
+        font-size: 28px;
+        color: #343a40;
+        margin-bottom: 30px;
+        font-weight: bold;
     }
+
+/* Individual Result Item */
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+    .result-item:hover {
+        background-color: #f1f1f1;
+    }
+
+/* Left Side: Text for Option and Vote Count */
+.result-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 18px;
+    color: #495057;
+}
+
+.option-text {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 20px;
+}
+
+.vote-count {
+    font-size: 16px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* Right Side: Circular Progress for Percentage */
+.result-circle {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 8px solid #ddd; /* Base circle color */
+    background: conic-gradient(#28a745 calc(var(--percentage) * 1%), #ddd 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+    .result-circle .percentage-text {
+        position: absolute;
+        font-size: 18px;
+        font-weight: bold;
+        color: #343a40;
+    }
+
+/* Hover effect for result items */
+.result-item:hover .result-circle {
+    background: conic-gradient(#28a745 calc(var(--percentage) * 1%), #ddd 0deg);
+}
+
+

@@ -21,28 +21,35 @@
         <!-- Poll voting screen -->
         <h3 id="pollTitle"></h3>
         <p id="pollDescription"></p>
-        <div id="options"></div>
+        <div id="options">
+            <!-- Dynamically added options will go here -->
+        </div>
 
-        <button onclick="castVote()">Oy Ver</button>
+        <button onclick="castVote()" id="voteButton">Oy Ver</button>
 
         <!-- Results section below the poll -->
-        <h3>Sonuçlar</h3>
-        <div id="results"></div>
+        <div id="results">
+            <h3>Sonuçlar</h3>
+            <!-- Results will be dynamically added here -->
+        </div>
+
+        <button onclick="deletePoll()">Anketi Sil</button>
     </div>
 
+
     <!-- Yeni anket ekleme formu -->
-<div id="newPollContainer" style="display:none;">
-    <h3>Yeni Anket Ekle</h3>
-    <input type="text" id="newPollTitle" placeholder="Anket Başlığı"><br>
-    <textarea id="newPollDescription" placeholder="Açıklama"></textarea><br>
-    <div id="pollOptionsContainer">
-        <input type="text" id="newPollOption1" placeholder="Seçenek 1"><br>
-        <input type="text" id="newPollOption2" placeholder="Seçenek 2"><br>
+    <div id="newPollContainer" style="display:none;">
+        <h3>Yeni Anket Ekle</h3>
+        <input type="text" id="newPollTitle" placeholder="Anket Başlığı"><br>
+        <textarea id="newPollDescription" placeholder="Açıklama"></textarea><br>
+        <div id="pollOptionsContainer">
+            <input type="text" id="newPollOption1" placeholder="Seçenek 1"><br>
+            <input type="text" id="newPollOption2" placeholder="Seçenek 2"><br>
+        </div>
+        <button onclick="addOption()">Seçenek Ekle</button>
+        <button onclick="addPoll()">Anket Ekle</button>
+        <button onclick="cancelNewPoll()">İptal</button>
     </div>
-    <button onclick="addOption()">Seçenek Ekle</button>
-    <button onclick="addPoll()">Anket Ekle</button>
-    <button onclick="cancelNewPoll()">İptal</button>
-</div>
 
 
     <!-- SignalR Script -->
