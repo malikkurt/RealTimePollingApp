@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RealTimePollingApp.Data;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddCors(options =>
 {
@@ -13,15 +17,13 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Session kullanýmý için gerekli servisleri ekliyoruz
-builder.Services.AddDistributedMemoryCache(); // Session için bellek tabanlý cache
+builder.Services.AddDistributedMemoryCache(); 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.HttpOnly = true; // Güvenlik için sadece Http protokolü üzerinden eriþim saðlanýr
-    options.Cookie.IsEssential = true; // Çerez zorunlu hale gelir
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Oturum süresi
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; 
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -40,21 +42,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAllOrigins");
-
-app.UseSession(); // Session middleware'ini ekliyoruz
+app.UseSession(); 
 
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
-app.UseRouting(); // UseRouting burada çaðrýlýyor
+app.UseRouting();
 
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapFallbackToFile("/login.html"); // Varsayýlan sayfa login.html olacak
+    endpoints.MapFallbackToFile("/login.html"); 
 });
 
 app.MapHub<PollHub>("/pollHub");

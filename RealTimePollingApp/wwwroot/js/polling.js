@@ -1,7 +1,9 @@
 ﻿// SignalR bağlantısını kur
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7048/pollHub") // SignalR hub URL
+    .withUrl(`${window.location.protocol}//${window.location.hostname}:7048/pollHub`) // Dinamik URL
     .build();
+
+const apiUrl = `${window.location.protocol}//${window.location.hostname}:7048/api`;
 
 // SignalR bağlantısını başlat
 async function start() {
@@ -17,7 +19,7 @@ start();
 
 // Tüm anketleri listeleme
 async function loadPolls() {
-    const response = await fetch("https://localhost:7048/api/poll"); // Backend API'den anketleri alıyoruz
+    const response = await fetch(`${apiUrl}/poll`);
     const polls = await response.json();
 
     const pollListContainer = document.getElementById("pollList");
@@ -33,19 +35,19 @@ async function loadPolls() {
 
 // Belirli bir anketin bilgilerini yükle
 async function loadPoll(pollId) {
-    const response = await fetch(`https://localhost:7048/api/poll/${pollId}`);
+    const response = await fetch(`${apiUrl}/poll/${pollId}`);
     const poll = await response.json();
 
     document.getElementById("newPollContainer").style.display = "none"; // Yeni anket formunu gizle
-    document.getElementById("pollListContainer").style.display = "block"; // Keep sidebar visible
-    document.getElementById("pollContainer").style.display = "block"; // Show the poll container
+    document.getElementById("pollListContainer").style.display = "block"; // Sidebar'ı görünür tut
+    document.getElementById("pollContainer").style.display = "block"; // Anket konteynerini göster
 
     document.getElementById("pollTitle").innerText = poll.title;
-    document.getElementById("pollTitle").setAttribute("data-poll-id", poll.id); // Store poll ID
+    document.getElementById("pollTitle").setAttribute("data-poll-id", poll.id); // Poll ID'yi sakla
     document.getElementById("pollDescription").innerText = poll.description;
 
     const optionsContainer = document.getElementById("options");
-    optionsContainer.innerHTML = ''; // Clear previous options
+    optionsContainer.innerHTML = ''; // Önceki seçenekleri temizle
     poll.options.forEach(option => {
         const optionElement = document.createElement("input");
         optionElement.type = "radio";
@@ -56,13 +58,14 @@ async function loadPoll(pollId) {
         optionsContainer.appendChild(document.createElement("br"));
     });
 
-    // Oy Ver button to cast vote
+    // Oy Ver butonuna tıklandığında oy kullanma işlemi
     const voteButton = document.querySelector("#pollContainer button");
     voteButton.onclick = () => castVote(pollId);
 
-    // Get and display results
-    getPollResults(pollId);
+    // Sonuçları gizle
+    document.getElementById("results").style.display = "none"; // Sonuçları başlangıçta gizle
 }
+
 
 // Sayfa yüklendiğinde tüm anketleri listele
 loadPolls();
@@ -72,20 +75,29 @@ async function castVote(pollId) {
     const selectedOptionElement = document.querySelector('input[name="pollOption"]:checked');
     if (!selectedOptionElement) {
         alert("Lütfen bir seçenek belirleyin.");
-        return;  // Eğer seçenek seçilmediyse işlemi durdur
+        return; // Eğer seçenek seçilmediyse işlemi durdur
     }
 
     const selectedOption = selectedOptionElement.value;
 
     // Oy gönderme isteği
-    await fetch(`https://localhost:7048/api/poll/${pollId}/vote`, {
+    const response = await fetch(`${apiUrl}/poll/${pollId}/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedOption)
     });
 
-    
+    if (response.ok) {
+        alert("Oy kullanıldı!");
+
+        // Sonuçları göster
+        document.getElementById("results").style.display = "block";
+        getPollResults(pollId); // Sonuçları yükle
+    } else {
+        alert("Oy kullanılırken bir hata oluştu.");
+    }
 }
+
 
 // SignalR ile güncel sonuçları dinleme
 connection.on("ReceiveResults", (pollId, results) => {
