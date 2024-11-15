@@ -53,19 +53,39 @@ public class PollController : ControllerBase
         return Ok(poll);
     }
 
-    
+
     // 3. Belirli bir ankete oy verme ve sonuçları yayma
     [HttpPost("{pollId}/vote")]
     public async Task<IActionResult> Vote(int pollId, [FromBody] string selectedOption)
     {
+        // Kullanıcının oturumda belirli bir kullanıcı adı olup olmadığını kontrol et
+        var userName = HttpContext.Session.GetString("username");
+        if (string.IsNullOrEmpty(userName))
+        {
+            return Unauthorized("User must be logged in to vote.");
+        }
+
         var poll = await _context.Polls.FindAsync(pollId);
         if (poll == null || !poll.Options.Contains(selectedOption))
         {
             return BadRequest("Invalid poll or option.");
         }
 
+        // Kullanıcı bu ankete zaten oy vermiş mi kontrol et
+        var existingVote = await _context.Votes
+            .FirstOrDefaultAsync(v => v.PollId == pollId && v.UserName == userName);
+        if (existingVote != null)
+        {
+            return BadRequest("You can only vote once in this poll.");
+        }
+
         // Yeni bir oy oluştur ve veritabanına ekle
-        var vote = new Vote { PollId = pollId, SelectedOption = selectedOption };
+        var vote = new Vote
+        {
+            PollId = pollId,
+            SelectedOption = selectedOption,
+            UserName = userName  // Kullanıcı adı da ekleniyor
+        };
         _context.Votes.Add(vote);
         await _context.SaveChangesAsync();
 
@@ -77,7 +97,7 @@ public class PollController : ControllerBase
             {
                 Option = g.Key,
                 Count = g.Count(),
-                Percentage = (float)g.Count() / _context.Votes.Count(v => v.PollId == pollId) * 100 // Yüzde hesaplama
+                Percentage = (float)g.Count() / _context.Votes.Count(v => v.PollId == pollId) * 100
             })
             .ToList();
 
@@ -86,6 +106,7 @@ public class PollController : ControllerBase
 
         return Ok();
     }
+
 
 
 

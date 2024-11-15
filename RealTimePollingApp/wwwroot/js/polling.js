@@ -83,6 +83,8 @@ async function castVote(pollId) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selectedOption)
     });
+
+    
 }
 
 // SignalR ile güncel sonuçları dinleme
@@ -237,3 +239,29 @@ async function deletePoll() {
         }
     }
 }
+
+// Sayfa yüklendiğinde session kontrolü yapalım
+fetch("/api/user/login")
+    .then(response => {
+        if (!response.ok) {
+            window.location.href = "login.html";  // Giriş yapılmamışsa login sayfasına yönlendir
+        }
+    });
+
+async function loadUserName() {
+    try {
+        const response = await fetch('/api/user/get-username'); 
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('userName').textContent = data.userName;
+        } else {
+            document.getElementById('userName').textContent = "Ziyaretçi";
+        }
+    } catch (error) {
+        console.error("Error fetching username:", error);
+        document.getElementById('userName').textContent = "Hata oluştu";
+    }
+}
+
+// Sayfa yüklendiğinde kullanıcı adını yükleyelim
+loadUserName();

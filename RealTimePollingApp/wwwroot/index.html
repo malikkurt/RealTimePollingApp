@@ -8,6 +8,12 @@
 
 </head>
 <body>
+
+    <div id="welcomeMessage">
+        <h2>Hoşgeldiniz, <span id="userName">Yükleniyor...</span></h2>
+    </div>
+
+
     <!-- Anketlerin listeleneceği bölüm (left sidebar) -->
     <div id="pollListContainer">
         <h3>Mevcut Anketler</h3>
@@ -51,11 +57,11 @@
         <button onclick="cancelNewPoll()">İptal</button>
     </div>
 
-
     <!-- SignalR Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
     <!-- Polling App JavaScript -->
     <script src="js/polling.js"></script>
 </body>
+
 
 </html>

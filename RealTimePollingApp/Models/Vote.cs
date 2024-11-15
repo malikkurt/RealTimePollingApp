@@ -2,9 +2,9 @@
 {
     public class Vote
     {
-        public int Id { get; set; } 
-        public int PollId { get; set; }
-        public string SelectedOption { get; set; } 
+        public int Id { get; set; }
+        public int PollId { get; set; }  
+        public string SelectedOption { get; set; }  
+        public string UserName { get; set; }  
     }
-
 }
